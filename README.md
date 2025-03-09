@@ -6,3 +6,10 @@ Proceed through the levels until you can track down and apprehend the mad genius
 Left click to shoot targets with the mouse or touch on mobile devices.
 Identify targets by waiting for them to pull out and arm their bomb.
 Take out all the bombers in the area to proceed to the next mission.
+
+## Credits
+Story & Inspiration: Andrew Statter
+Programming: Alexander McKinley
+Sprite Art: Alexander McKinley
+Music & SFX: Alexander McKinley
+BG & Cutscene Art: StarryAI
