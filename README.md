@@ -8,9 +8,9 @@ Identify targets by waiting for them to pull out and arm their bomb.
 Take out all the bombers in the area to proceed to the next mission.
 
 ## Credits
-Story & Inspiration: Andrew Statter
-Programming: Alexander McKinley
-Sprite Art: Alexander McKinley
-Music & SFX: Alexander McKinley
-Voice Artists: Alexander McKinley, Jamie Yugawa
-BG & Cutscene Art: StarryAI
+- Story & Inspiration: Andrew Statter
+- Programming: Alexander McKinley
+- Sprite Art: Alexander McKinley
+- Music & SFX: Alexander McKinley
+- Voice Artists: Alexander McKinley, Jamie Yugawa
+- BG & Cutscene Art: StarryAI
