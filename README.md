@@ -12,4 +12,5 @@ Story & Inspiration: Andrew Statter
 Programming: Alexander McKinley
 Sprite Art: Alexander McKinley
 Music & SFX: Alexander McKinley
+Voice Artists: Alexander McKinley, Jamie Yugawa
 BG & Cutscene Art: StarryAI
