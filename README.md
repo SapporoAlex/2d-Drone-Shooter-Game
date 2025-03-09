@@ -1,4 +1,4 @@
-# 2d Drone Shooter Game
+# 2d Drone Shooter Game "Bust a Nut"
 Pilot a drone as a member of the anti-criminally insane task force, "the Nut Busters", protecting the city against mad bomber men. Identify and shoot a tranquiliser darts into your targets before they can blow their load.
 Proceed through the levels until you can track down and apprehend the mad genius living on the outskirts of society, "the Edge Lord".
 
