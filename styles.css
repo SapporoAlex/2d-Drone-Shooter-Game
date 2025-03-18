@@ -1,3 +1,11 @@
 #gameCanvas {
     cursor: crosshair; /* Example: crosshair cursor */
 }
+
+@media (max-width: 768px) {
+    #gameCanvas {
+        cursor: crosshair; /* Example: crosshair cursor */
+        width: 90vw;
+        height: auto;
+    }
+}
