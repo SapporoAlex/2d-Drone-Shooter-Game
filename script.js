@@ -229,7 +229,8 @@ function handleClickOrTouch(event) {
                 addNextButton();
             }
             if (mouseX >= nextButton.x && mouseX <= nextButton.x + 100 &&
-                mouseY >= nextButton.y && mouseY <= nextButton.y + 50) {
+                mouseY >= nextButton.y && mouseY <= nextButton.y + 50 &&
+                buttons.length > 0) {
                 buttonSound.play();
                 cutsceneMusic.play();
                 backgroundImage = cS21;
@@ -269,7 +270,8 @@ function handleClickOrTouch(event) {
                 addNextButton();
             }
             if (mouseX >= nextButton.x && mouseX <= nextButton.x + 100 &&
-                mouseY >= nextButton.y && mouseY <= nextButton.y + 50) {
+                mouseY >= nextButton.y && mouseY <= nextButton.y + 50 &&
+                buttons.length > 0) {
                 buttonSound.play();
                 cutsceneMusic.play();
                 backgroundImage = cS31;
@@ -310,7 +312,8 @@ function handleClickOrTouch(event) {
                 addNextButton();
             }
             if (mouseX >= nextButton.x && mouseX <= nextButton.x + 100 &&
-                mouseY >= nextButton.y && mouseY <= nextButton.y + 50) {
+                mouseY >= nextButton.y && mouseY <= nextButton.y + 50 &&
+                buttons.length > 0) {
                 buttonSound.play();
                 cutsceneMusic.play();
                 backgroundImage = cS41;
@@ -592,19 +595,19 @@ function drawText() {
             wonText1 = `You shot a lotta innocents,`;
             wonText2 = `but dammit, you got the job done!`;
         }
-        if (score > 99 && score < 999) {
+        if (score > 99 && score < 4999) {
             rank = "PRIVATE NUTBUSTER";
             wonText1 = `Nice work Major!`;
             wonText2 = `You can bust a`;
             wonText3 = `nut for me anyday!`;
         }
-        if (score > 1000 && score < 4999) {
+        if (score > 5000 && score < 9999) {
             rank = "MASTER NUTBUSTER";
             wonText1 = `Dr. Jakinov will think twice`;
             wonText2 = `before he tries to blow us again!`;
             wonText3 = `Good job busting those nuts!`;
         }
-        if (score > 5000) {
+        if (score > 10000) {
             rank = "5-BROWNSTAR NUTBUSTER";
             wonText1 = `You saved freedom!`;
             wonText2 = `I promote you to`;
@@ -617,10 +620,10 @@ function drawText() {
         ctx.fillText(`${wonText2}`, 50, 200);
         ctx.fillText(`${wonText3}`, 50, 250);
         ctx.fillText(`STATS`, 50, canvas.height / 2 - 50);
-        ctx.fillText(`Nuts Busted....${nutShot}`, 50, canvas.height / 2);
-        ctx.fillText(`Civilians......${civShot}`, 50, canvas.height / 2 + 50);
-        ctx.fillText(`Total Score....${score}`, 50, canvas.height / 2 + 100);
-        ctx.fillText(`Rank...........${rank}`, 50, canvas.height / 2 + 150);
+        ctx.fillText(`Nuts Busted: ${nutShot}`, 50, canvas.height / 2);
+        ctx.fillText(`Civs Busted: ${civShot}`, 50, canvas.height / 2 + 50);
+        ctx.fillText(`Total Score: ${score}`, 50, canvas.height / 2 + 100);
+        ctx.fillText(`Rank: ${rank}`, 50, canvas.height / 2 + 150);
     }
 }
 function checkCleared() {
