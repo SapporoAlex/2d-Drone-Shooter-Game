@@ -2,6 +2,11 @@ const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 const loseMessages = ["Oops...", "This is bad...", "Aw... Shit!", "Dr. Jakinov has beat us!", "Well, that sucks.", "They blew us!"]
 
+const lvl1timer = 60000;
+const lvl2timer = 120000;
+const lvl3timer = 180000;
+
+
 let level = 0;
 let bombTimer = 20000;
 let inGame = false;
@@ -15,6 +20,9 @@ let nextLevel = 1;
 let waited = false;
 let wait = 3000;
 let current = 3000;
+let civShot = 0;
+let nutShot = 0;
+let score = 0;
 
 canvas.width = 500;
 canvas.height = 700;
@@ -87,8 +95,6 @@ credits.src = "assets/images/cutscenes/credits.png";
 const howTo = new Image();
 howTo.src = "assets/images/cutscenes/howto.png";
 
-
-// Add more button art 200x100 then scale down to 100x50 for 8-bit
 const startBtn = new Image();
 startBtn.src = "assets/images/ui/startBtn.jpg"
 const howToBtn = new Image();
@@ -100,8 +106,12 @@ nextBtn.src = "assets/images/ui/nextBtn.jpg"
 const backBtn = new Image();
 backBtn.src = "assets/images/ui/backBtn.jpg"
 
-let backgroundImage = titleImage;
+const logo1 = new Image();
+logo1.src = "assets/images/cutscenes/titleText1.png"
+const logo2 = new Image();
+logo2.src = "assets/images/cutscenes/titleText2.png"
 
+let backgroundImage = titleImage;
 
 titleImage.onload = () => {
     drawBackground();
@@ -131,8 +141,6 @@ function getFramesForState(enemy: boolean, color: string, state: string): HTMLIm
 }
 
 const targets: Target[] = [];
-let score = 0;
-
 const buttons: Button[] = [];
 
 function spawnTarget() {
@@ -164,16 +172,56 @@ function spawnTarget() {
     targets.push(newTarget);
 }
 
+const logo = {
+    x: 30,
+    y: -150, // Start above canvas
+    targetY: 150, // Stop position
+    imageIndex: 0,
+    speedY: 3, // Speed of downward movement
+    frames: [logo1, logo2], // Array to store images
+    currentFrame: logo1,
+};
+
+// Switch logo every 500ms
+setInterval(() => {
+    logo.imageIndex = (logo.imageIndex + 1) % 2;
+    logo.currentFrame = logo.frames[logo.imageIndex];
+  }, 200);
+  
+  function updateLogoPosition() {
+    // Move the logo down until it reaches targetY
+    if (logo.y < logo.targetY) {
+      logo.y += logo.speedY;
+      if (logo.y > logo.targetY) {
+        logo.y = logo.targetY;
+      }
+    }
+  }
+  
+  function drawLogo() {
+    ctx.drawImage(logo.currentFrame, logo.x, logo.y);
+  }
+
+
 const playButton: Button = {x:canvas.width/2 -50, y:600, type:"play", image: startBtn}
 const howToButton: Button = {x:canvas.width/2 -200, y:600, type:"howto", image: howToBtn}
 const creditsButton: Button = {x:canvas.width/2 + 100, y:600, type:"credits", image: creditsBtn}
-const nextButton: Button = {x:canvas.width-150, y:600, type:"next", image:nextBtn}
-const backButton: Button = {x:canvas.width-150, y:600, type:"next", image:backBtn}
+const nextButton: Button = {x:canvas.width-105, y:645, type:"next", image:nextBtn}
+const backButton: Button = {x:canvas.width-105, y:645, type:"back", image:backBtn}
 
-canvas.addEventListener("click", (event) => {  
+function handleClickOrTouch(event) {
+    event.preventDefault(); // Prevents unwanted scrolling on mobile
+
     const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    let mouseX, mouseY;
+
+    if (event.type === "touchstart") {
+        mouseX = (event.touches[0].clientX - rect.left) * (canvas.width / rect.width);
+        mouseY = (event.touches[0].clientY - rect.top) * (canvas.height / rect.height);
+    } else {
+        mouseX = (event.clientX - rect.left) * (canvas.width / rect.width);
+        mouseY = (event.clientY - rect.top) * (canvas.height / rect.height);
+    }
 
     switch (level) {
         case 0: // title
@@ -190,7 +238,7 @@ canvas.addEventListener("click", (event) => {
         if (mouseX >= howToButton.x && mouseX <= howToButton.x + 100 &&
             mouseY >= howToButton.y && mouseY <= howToButton.y + 50) {
                 buttonSound.play();
-                backgroundImage = cS10;
+                backgroundImage = howTo;
                 level = 14;
                 addbackButton();
         }
@@ -198,7 +246,7 @@ canvas.addEventListener("click", (event) => {
         if (mouseX >= creditsButton.x && mouseX <= creditsButton.x + 100 &&
             mouseY >= creditsButton.y && mouseY <= creditsButton.y + 50) {
                 buttonSound.play();
-                backgroundImage = cS10;
+                backgroundImage = credits;
                 level = 15;
                 addbackButton();
         }
@@ -220,7 +268,7 @@ canvas.addEventListener("click", (event) => {
         if (mouseX >= nextButton.x && mouseX <= nextButton.x + 100 &&
             mouseY >= nextButton.y && mouseY <= nextButton.y + 50) {
                 buttonSound.play();
-                timer = 3000;
+                timer = lvl1timer;
                 startTimer = performance.now();
                 cutsceneMusic.pause();
                 cleared = false;
@@ -256,7 +304,7 @@ canvas.addEventListener("click", (event) => {
                 cleared = false;
                 level = 21;
                 startTimer = performance.now();
-                backgroundImage = cS21;
+                backgroundImage = cS22;
                 addNextButton();
         }
             break;
@@ -267,7 +315,7 @@ canvas.addEventListener("click", (event) => {
                 buttonSound.play();
                 cutsceneMusic.pause();
                 level = 2;
-                timer = 3000;
+                timer = lvl2timer;
                 startTimer = performance.now();
                 backgroundImage = lvlTwoImage;
                 buttons.length = 0;
@@ -315,7 +363,7 @@ canvas.addEventListener("click", (event) => {
                 cutsceneMusic.pause();
                 backgroundImage = lvlThreeImage;
                 level = 3;
-                timer = 3000;
+                timer = lvl3timer;
                 cleared = false;
                 startTimer = performance.now();
                 buttons.length = 0;
@@ -357,6 +405,7 @@ canvas.addEventListener("click", (event) => {
             break;
 
         case 4: // lose
+
         if (mouseX >= backButton.x && mouseX <= backButton.x + 100 &&
             mouseY >= backButton.y && mouseY <= backButton.y + 50) {
                 buttonSound.play();
@@ -366,6 +415,7 @@ canvas.addEventListener("click", (event) => {
             break;
 
         case 5: // win
+
         if (mouseX >= backButton.x && mouseX <= backButton.x + 100 &&
             mouseY >= backButton.y && mouseY <= backButton.y + 50) {
                 buttonSound.play();
@@ -409,6 +459,7 @@ canvas.addEventListener("click", (event) => {
                 score += 100;
                 shootSound.play();
                 console.log("Score:", score);
+                nutShot++;
                 break;
         }
         if (mouseX >= target.x && mouseX <= target.x + 50 &&
@@ -421,10 +472,14 @@ canvas.addEventListener("click", (event) => {
                 score -= 100;
                 shootSound.play();
                 console.log("Score:", score);
+                civShot++;
                 break;
         }
     }
-});
+};
+
+canvas.addEventListener("click", handleClickOrTouch);
+canvas.addEventListener("touchstart", handleClickOrTouch);
 
 function addNextButton() {
     buttons.length = 0;
@@ -447,6 +502,8 @@ function addbackButton() {
 function gameReset() {
     level = 0;
     score = 0;
+    civShot = 0;
+    nutShot = 0;
     lostText = loseMessages[Math.floor(Math.random() * loseMessages.length)]
     loseSound.pause();
     bombDet.pause();
@@ -478,6 +535,7 @@ function detonation() {
         else {
             backgroundImage = loseImage;
             exploding = false;
+            addbackButton();
             level = 4;
         }
     }
@@ -538,7 +596,7 @@ function update() {
                     ctx.fillStyle = "white";
                 }
                 alertSound.play();
-                ctx.fillText("Detonation Imminent!", canvas.width / 2 - 150, canvas.height / 2);
+                ctx.fillText("Detonation Imminent!", 50, canvas.height / 2);
             }
             if (performance.now() - target.spawnTime > bombTimer){
                 detonation();
@@ -598,7 +656,7 @@ function drawTimer() {
     timeLeft =  Math.floor((startTimer - performance.now() + timer) / 1000);
     ctx.fillStyle = "white";
     ctx.font = "30px impact";
-    ctx.fillText(`Protection: ${timeLeft}`, canvas.width / 2 - 50, 30);
+    ctx.fillText(`Defuse: ${timeLeft}`, canvas.width / 2 - 50, 30);
 }
 
 function drawButtons() {
@@ -633,7 +691,7 @@ function drawText() {
     }
     if (level === 4) {
         ctx.fillStyle = "white";
-        ctx.font = "35px impact";
+        ctx.font = "32px impact";
         ctx.fillText(`${lostText}`, canvas.width / 3, canvas.height / 2);
         ctx.fillText(`Your score: ${score}`, canvas.width / 3, canvas.height / 2 + 100);
     }
@@ -641,27 +699,43 @@ function drawText() {
         let wonText1 = "";
         let wonText2 = "";
         let wonText3 = "";
+        let rank = "";
         if (score < 99) {
+            rank = "PIECE OF SHIT";
             wonText1 = `You shot a lotta innocents,`;
             wonText2 = `but dammit, you got the job done!`;
         }
 
         if (score > 99 && score < 999) {
+            rank = "PRIVATE NUTBUSTER";
             wonText1 = `Nice work Major!`;
-            wonText2 = `You can bust a nut for me anyday!`;
+            wonText2 = `You can bust a`;
+            wonText3 = `nut for me anyday!`
         }
-        if (score > 1000) {
+        if (score > 1000 && score < 4999) {
+            rank = "MASTER NUTBUSTER";
             wonText1 = `Dr. Jakinov will think twice`;
             wonText2 = `before he tries to blow us again!`;
             wonText3 = `Good job busting those nuts!`;
         }
+        if (score > 5000) {
+            rank = "5-BROWNSTAR NUTBUSTER";
+            wonText1 = `You saved freedom!`;
+            wonText2 = `I promote you to`;
+            wonText3 = `Major Fattygay!`
+        }
         
         ctx.fillStyle = "white";
         ctx.font = "28px impact";
-        ctx.fillText(`${wonText1}`, 100, canvas.height / 2);
-        ctx.fillText(`${wonText2}`, 100, canvas.height / 2 + 50);
-        ctx.fillText(`${wonText3}`, 100, canvas.height / 2 + 100);
-        ctx.fillText(`Your score: ${score}`, canvas.width / 3, canvas.height / 2 + 150);
+        ctx.fillText(`CONGRATULATION!!!`, 50, 100);
+        ctx.fillText(`${wonText1}`, 50, 150);
+        ctx.fillText(`${wonText2}`, 50, 200);
+        ctx.fillText(`${wonText3}`, 50, 250);
+        ctx.fillText(`STATS`, 50, canvas.height / 2 - 50);
+        ctx.fillText(`Nuts Busted....${nutShot}`, 50, canvas.height / 2);
+        ctx.fillText(`Civilians......${civShot}`, 50, canvas.height / 2 + 50);
+        ctx.fillText(`Total Score....${score}`, 50, canvas.height / 2 + 100);
+        ctx.fillText(`Rank...........${rank}`, 50, canvas.height / 2 + 150);
     }
 }
 
@@ -709,7 +783,7 @@ function updateLevel() {
         inGame = true;
         backgroundImage = lvlTwoImage;
         missionMusic2.play();
-        bombTimer = 18000;
+        bombTimer = 20000;
 
         if (timeLeft === 0) {
             missionMusic2.pause();
@@ -730,7 +804,7 @@ function updateLevel() {
         inGame = true;
         backgroundImage = lvlThreeImage;
         missionMusic3.play();
-        bombTimer = 15000;
+        bombTimer = 20000;
 
         if (timeLeft === 0) {
             missionMusic3.pause();
@@ -776,6 +850,10 @@ function gameLoop() {
     }
     drawText();
     drawButtons();
+    if (level === 0) {
+        updateLogoPosition();
+        drawLogo();
+    }
     update();
 
     requestAnimationFrame(gameLoop);
