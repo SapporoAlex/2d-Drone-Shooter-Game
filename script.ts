@@ -42,6 +42,50 @@ const cutsceneMusic = new Audio("assets/audio/cut.mp3");
 const clearedSound = new Audio("assets/audio/cleared.mp3");
 const buttonSound = new Audio("assets/audio/buttonSound.mp3");
 
+missionMusic1.volume =0.5;
+missionMusic2.volume =0.5;
+missionMusic3.volume =0.5;
+winSound.volume =0.5;
+
+const gibberish = [
+    new Audio("assets/audio/nuts/1.mp3"),
+    new Audio("assets/audio/nuts/2.mp3"),
+    new Audio("assets/audio/nuts/3.mp3"),
+    new Audio("assets/audio/nuts/4.mp3"),
+    new Audio("assets/audio/nuts/5.mp3"),
+    new Audio("assets/audio/nuts/6.mp3"),
+    new Audio("assets/audio/nuts/7.mp3"),
+    new Audio("assets/audio/nuts/8.mp3"),
+    new Audio("assets/audio/nuts/9.mp3"),
+    new Audio("assets/audio/nuts/10.mp3"),
+    new Audio("assets/audio/nuts/11.mp3"),
+    new Audio("assets/audio/nuts/12.mp3"),
+    new Audio("assets/audio/nuts/13.mp3"),
+    new Audio("assets/audio/nuts/14.mp3"),
+    new Audio("assets/audio/nuts/15.mp3"),
+    new Audio("assets/audio/nuts/16.mp3"),
+    new Audio("assets/audio/nuts/17.mp3"),
+    new Audio("assets/audio/nuts/18.mp3"),
+    new Audio("assets/audio/nuts/19.mp3"),
+    new Audio("assets/audio/nuts/20.mp3"),
+    new Audio("assets/audio/nuts/21.mp3"),
+    new Audio("assets/audio/nuts/22.mp3"),
+    new Audio("assets/audio/nuts/23.mp3"),
+    new Audio("assets/audio/nuts/24.mp3"),
+    new Audio("assets/audio/nuts/25.mp3"),
+    new Audio("assets/audio/nuts/26.mp3"),
+    new Audio("assets/audio/nuts/27.mp3"),
+    new Audio("assets/audio/nuts/28.mp3"),
+    new Audio("assets/audio/nuts/29.mp3"),
+    new Audio("assets/audio/nuts/30.mp3"),
+    new Audio("assets/audio/nuts/31.mp3"),
+    new Audio("assets/audio/nuts/32.mp3"),
+    new Audio("assets/audio/nuts/33.mp3"),
+    new Audio("assets/audio/nuts/34.mp3"),
+    new Audio("assets/audio/nuts/35.mp3"),
+    new Audio("assets/audio/nuts/36.mp3")
+  ];
+
 interface Target {
     x: number;
     y: number;
@@ -116,6 +160,17 @@ let backgroundImage = titleImage;
 titleImage.onload = () => {
     drawBackground();
 };
+
+function playRandomNut() {
+    // Generate a random index between 0 and 35 (since there are 36 files)
+    const randomIndex = Math.floor(Math.random() * gibberish.length);
+
+    // Get the random audio from the list
+    const randomAudio = gibberish[randomIndex];
+
+    // Play the audio
+    randomAudio.play();
+}
 
 function drawBackground() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -461,6 +516,7 @@ function handleClickOrTouch(event) {
                 target.imageIndex = 0; // Reset frame index for animation
                 score += 100;
                 shootSound.play();
+                playRandomNut();
                 console.log("Score:", score);
                 nutShot++;
                 break;
