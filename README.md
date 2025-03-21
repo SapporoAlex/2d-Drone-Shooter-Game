@@ -7,6 +7,8 @@ Left click to shoot targets with the mouse or touch on mobile devices.
 Identify targets by waiting for them to pull out their detonator.
 Take out all the bombers in the area to proceed to the next mission.
 
+<a href="https://sapporoalex.github.io/2d-Drone-Shooter-Game/">PLAY BUST A NUT!</a>
+
 ## Credits
 - Story & Inspiration: Andrew Statter
 - Programming: Alexander McKinley
