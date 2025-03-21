@@ -35,7 +35,6 @@ const missionMusic1 = new Audio("assets/audio/mission1.mp3");
 const missionMusic2 = new Audio("assets/audio/mission2.mp3");
 const missionMusic3 = new Audio("assets/audio/mission3.mp3");
 const shootSound = new Audio("assets/audio/shoot.mp3");
-const hitSound = new Audio("assets/audio/ouch.mp3");
 const alertSound = new Audio("assets/audio/alert.mp3");
 const bombDet = new Audio("assets/audio/bombDet.mp3");
 const cutsceneMusic = new Audio("assets/audio/cut.mp3");
