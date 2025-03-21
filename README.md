@@ -14,10 +14,4 @@ Take out all the bombers in the area to proceed to the next mission.
 - Music & SFX: Alexander McKinley
 - Voice Artists: Alexander McKinley, Jamie Yugawa
 - Cutscene Art: StarryAI, Alexander McKinley
-
-## Still Needs Implementation
-- cutscenes
-- levels
-- title
-- voices, music, sfx
-- hi-scores
+- Testing: Momo McKinley, Jamie Yugawa
