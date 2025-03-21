@@ -1,6 +1,6 @@
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
-const loseMessages = ["Oops...", "This is bad...", "Aw... Shit!", "Dr. Jakinov has beat us!", "Well, that sucks.", "They blew us!"]
+const loseMessages = ["Oops...", "This is bad...", "Aw... Shit!", "Dr. Jakinov beat us!", "Well, that sucks.", "They blew us!", "Fuck..."]
 
 const lvl1timer = 60000;
 const lvl2timer = 120000;
@@ -42,10 +42,10 @@ const cutsceneMusic = new Audio("assets/audio/cut.mp3");
 const clearedSound = new Audio("assets/audio/cleared.mp3");
 const buttonSound = new Audio("assets/audio/buttonSound.mp3");
 
-missionMusic1.volume =0.5;
-missionMusic2.volume =0.5;
-missionMusic3.volume =0.5;
-winSound.volume =0.5;
+missionMusic1.volume = 0.3;
+missionMusic2.volume = 0.3;
+missionMusic3.volume = 0.3;
+winSound.volume = 0.3;
 
 const gibberish = [
     new Audio("assets/audio/nuts/1.mp3"),
