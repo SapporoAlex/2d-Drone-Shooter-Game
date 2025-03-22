@@ -2,6 +2,36 @@
     cursor: crosshair; /* Example: crosshair cursor */
 }
 
+#options {
+    margin-top: 15px;
+  }
+  
+.optionBtn {
+font-family: 'Press Start 2P', cursive;
+font-size: 20px;
+background-color: #000000;
+color: #2bff00;
+border: 3px solid #13ff0b;
+padding: 10px 20px;
+margin: 10px;
+cursor: pointer;
+border-radius: 12px;
+box-shadow: 5px 5px 0px #33333379;
+transition: all 0.2s ease-in-out;
+}
+
+.optionBtn:hover {
+background-color: #046900;
+color: #13ff0b;
+box-shadow: 3px 3px 0px #22222280;
+transform: scale(1.1);
+}
+
+.optionBtn:active {
+transform: scale(0.95);
+box-shadow: 1px 1px 0px #0000008a;
+}
+  
 @media (max-width: 768px) {
     #gameCanvas {
         cursor: crosshair; /* Example: crosshair cursor */

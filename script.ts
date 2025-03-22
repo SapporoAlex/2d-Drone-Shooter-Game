@@ -23,6 +23,10 @@ let current = 3000;
 let civShot = 0;
 let nutShot = 0;
 let score = 0;
+let pausedTime = 0;
+let startPauseTime = 0;
+let isPaused = false;
+let isMusic = true;
 
 canvas.width = 500;
 canvas.height = 700;
@@ -35,6 +39,7 @@ const missionMusic1 = new Audio("assets/audio/mission1.mp3");
 const missionMusic2 = new Audio("assets/audio/mission2.mp3");
 const missionMusic3 = new Audio("assets/audio/mission3.mp3");
 const shootSound = new Audio("assets/audio/shoot.mp3");
+const hitSound = new Audio("assets/audio/ouch.mp3");
 const alertSound = new Audio("assets/audio/alert.mp3");
 const bombDet = new Audio("assets/audio/bombDet.mp3");
 const cutsceneMusic = new Audio("assets/audio/cut.mp3");
@@ -160,6 +165,44 @@ titleImage.onload = () => {
     drawBackground();
 };
 
+function togglePause() {
+    if (isPaused) {
+      isPaused = false;
+      document.getElementById("pauseBtn").innerHTML = `&#8214;`;
+      pausedTime += performance.now() - startPauseTime;
+    } else {
+      isPaused = true;
+      document.getElementById("pauseBtn").innerHTML = `&#8883;`;
+      startPauseTime = performance.now();
+    }
+}
+document.getElementById("pauseBtn").addEventListener("click", togglePause);
+
+function toggleMusic() {
+    if (isMusic) {
+      isMusic = false;
+      document.getElementById("musicBtn").innerHTML = "&#9835;";
+      missionMusic1.volume = 0.0;
+      missionMusic2.volume = 0.0;
+      missionMusic3.volume = 0.0;
+      winSound.volume = 0.0;
+      loseSound.volume = 0.0;
+      cutsceneMusic.volume = 0.0;
+      menuMusic.volume = 0.0;
+    } else {
+      isMusic = true;
+      document.getElementById("musicBtn").innerHTML = "<s>&#9835;</s>";
+      missionMusic1.volume = 0.3;
+      missionMusic2.volume = 0.3;
+      missionMusic3.volume = 0.3;
+      winSound.volume = 1.0;
+      loseSound.volume = 1.0;
+      cutsceneMusic.volume = 1.0;
+      menuMusic.volume = 1.0;
+    }
+}
+document.getElementById("musicBtn").addEventListener("click", toggleMusic);
+
 function playRandomNut() {
     // Generate a random index between 0 and 35 (since there are 36 files)
     const randomIndex = Math.floor(Math.random() * gibberish.length);
@@ -203,11 +246,11 @@ function spawnTarget() {
     const speedX = Math.random() > 0.5 ? 1 : -1;
     const enemy = Math.random() > 0.5;
     const state = "walk"; // Default state (change this based on game logic)
-    const stateChangeTime = performance.now() + 2000;
+    const stateChangeTime = performance.now() + 2000 + pausedTime;
     const colors = ["green"];
     const color = colors[Math.floor(Math.random() * colors.length)]; // Pick a random color
     const frames = getFramesForState(enemy, color, state);
-    const countDown = performance.now() + 6000; // 20 seconds from spawn time
+    const countDown = performance.now() + 6000 + pausedTime; // 20 seconds from spawn time
     const newTarget: Target = {
         x,
         y,
@@ -264,6 +307,8 @@ const nextButton: Button = {x:canvas.width-105, y:645, type:"next", image:nextBt
 const backButton: Button = {x:canvas.width-105, y:645, type:"back", image:backBtn}
 
 function handleClickOrTouch(event) {
+    if (!isPaused) {
+
     event.preventDefault(); // Prevents unwanted scrolling on mobile
 
     const rect = canvas.getBoundingClientRect();
@@ -534,6 +579,7 @@ function handleClickOrTouch(event) {
                 break;
         }
     }
+    }
 };
 
 canvas.addEventListener("click", handleClickOrTouch);
@@ -578,7 +624,7 @@ function detonation() {
 
 
     function fadeToWhite() {
-        let elapsedTime = performance.now() - explosionTime;
+        let elapsedTime = (performance.now() + pausedTime) - explosionTime;
         let alpha = Math.min(elapsedTime / fadeTime, 1); // Gradually increase alpha from 0 to 1
 
         ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
@@ -644,7 +690,7 @@ function update() {
 
         if (target.enemy) {
             // the imminemt alert will go off 5 secs before the bombtimer reaches zero
-            if (performance.now() - target.spawnTime > (bombTimer - 5000)) {
+            if (performance.now() - target.spawnTime > (bombTimer - 5000) + pausedTime) {
                 ctx.font = "40px Impact";
                 
                 // Alternate between red and white every 500ms
@@ -656,7 +702,7 @@ function update() {
                 alertSound.play();
                 ctx.fillText("Detonation Imminent!", 50, canvas.height / 2);
             }
-            if (performance.now() - target.spawnTime > bombTimer){
+            if ((performance.now() - pausedTime) - target.spawnTime > bombTimer){
                 detonation();
             }
         }
@@ -711,7 +757,7 @@ function update() {
 }
 
 function drawTimer() {
-    timeLeft =  Math.floor((startTimer - performance.now() + timer) / 1000);
+    timeLeft =  Math.floor((startTimer - (performance.now() - pausedTime) + timer) / 1000);
     ctx.fillStyle = "white";
     ctx.font = "30px impact";
     ctx.fillText(`Defuse: ${timeLeft}`, canvas.width / 2 - 50, 30);
@@ -798,7 +844,7 @@ function drawText() {
 }
 
 function checkCleared() {
-    if (performance.now() > current + wait && cleared) {
+    if ((performance.now() - pausedTime) > current + wait && cleared) {
         waited = true;
     }
 }
@@ -897,23 +943,25 @@ function updateLevel() {
 }
 
 function gameLoop() {
-    updateLevel();
-    if (!exploding){
-        drawBackground();
+    if (!isPaused) {
+        updateLevel();
+        if (!exploding){
+            drawBackground();
+        }
+        if (inGame) {
+            checkCleared();
+            draw();
+            drawTimer();
+        }
+        drawText();
+        drawButtons();
+        if (level === 0) {
+            updateLogoPosition();
+            drawLogo();
+        }
+        update();
+        
     }
-    if (inGame) {
-        checkCleared();
-        draw();
-        drawTimer();
-    }
-    drawText();
-    drawButtons();
-    if (level === 0) {
-        updateLogoPosition();
-        drawLogo();
-    }
-    update();
-
     requestAnimationFrame(gameLoop);
 }
 
