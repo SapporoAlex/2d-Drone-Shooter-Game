@@ -16,4 +16,4 @@ Take out all the bombers in the area to proceed to the next mission.
 - Music & SFX: Alexander McKinley
 - Voice Artists: Alexander McKinley, Jamie Yugawa
 - Cutscene Art: StarryAI, Alexander McKinley
-- Testing: Momo McKinley, Jamie Yugawa
+- Testing: Momo McKinley, Jamie Yugawa, Katrina (Alaimo) Pettitt
