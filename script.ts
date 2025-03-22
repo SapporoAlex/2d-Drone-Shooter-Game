@@ -844,7 +844,7 @@ function drawText() {
 }
 
 function checkCleared() {
-    if ((performance.now() - pausedTime) > current + wait && cleared) {
+    if (performance.now() > current + wait && cleared) {
         waited = true;
     }
 }
